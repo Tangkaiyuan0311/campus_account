@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Custom login page</title>
+    <style>
+        .failed {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+<h3>
+    Login Form
+</h3>
+
+<form action="#" th:action="@{/authenticateTheUser}" method="post">
+    <!--
+    post the form to spring implementation of this mapping
+    -->
+    <!--
+    When login fails, by default Spring Security will
+    1. Send user back to your login page
+    2. Append an error parameter: ?error
+    -->
+    <div th:if="${param.error}">
+        <i class="failed">Invalid username/password.</i>
+    </div>
+
+
+    <p>
+        User name: <input type="text" name="username">
+    </p>
+    <p>
+        Password: <input type="password" name="password">
+    </p>
+
+    <input type="submit" value="Login">
+
+</form>
+
+</body>
+</html>

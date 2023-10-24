@@ -1,0 +1,32 @@
+ADMIN: can modify course info and student info
+STUDENT: read course and room info
+
+
+course and room: course reference a room id
+
+each student is associated with a list of courses
+
+
+student: remove enrolled courses, student's view of course list to add courses
+admin: admin's view of course list (modify and delete)
+
+
+course list 2 views:
+1. student, enroll courses(action: enroll, enrolled(no op)), see room detail, see course occupancy
+2. admin, update/delete courses, change room, see course occupancy
+problem: cascade type on course delete
+
+
+ROLE_STUDENT
+ROLE_ADMIN
+
+
+relation mapping:
+student -- many to many -- course
+course -- many to one -- room
+
+
+
+
+
+

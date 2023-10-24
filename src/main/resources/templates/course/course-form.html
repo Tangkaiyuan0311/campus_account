@@ -1,0 +1,71 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+
+    <title>Add Course</title>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h3>Courses</h3>
+    <hr>
+
+    <p class="h4 mb-4">Save Course</p>
+    <!--
+    define the form action, action="#": placeholder, leave the thymeleaf to do it
+    theCourse: the exact model generated and passed form the controller
+    th:object: the object that is going to be bound to the form
+    -->
+    <form action="#" th:action="@{/mvc/saveCourse}"
+          th:object="${theCourse}" method="post">
+
+
+    <!-- define the field bounding. model: a course object -->
+
+    <input type="hidden" th:field="*{id}">
+    <input type="text"
+           th:field="*{courseName}"
+           class="form-control mb-4 w-25"
+           placeholder="Course Name">
+    <input type="text"
+           th:field="*{courseCredit}"
+           class="form-control mb-4 w-25"
+           placeholder="Course Credit">
+    <input type="text"
+           th:field="*{collegeName}"
+           class="form-control mb-4 w-25"
+           placeholder="College Name">
+    <!--
+    <input type="text"
+           class="form-control mb-4 w-25"
+           name="roomId"
+           th:value="${theCourse.room == null ? null : theCourse.room.roomNumber}"
+           placeholder="Room number">
+     -->
+    <label for="roomInputSelect">Room number</label>
+    <select name="roomId" class="form-control mb-4 w-25" id="roomInputSelect">
+        <option th:each="i : ${roomIds}" th:value="${i}" th:text="${i}"
+                th:selected="${i==(theCourse.room == null ? null : theCourse.room.roomNumber)}"></option>
+    </select>
+
+    <input type="text"
+           class="form-control mb-4 w-25"
+           th:field="*{capacity}"
+           placeholder="Course capacity">
+    <button type="submit" class= "btn btn-info col-2">Save</button>
+
+    </form>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,108 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+
+    <title>Student info</title>
+</head>
+<body>
+
+<div class="container">
+
+    <h3>Current Student</h3>
+    <hr>
+
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+        <tr>
+            <th>FirstName</th>
+            <th>LastName</th>
+            <th>Email</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr>
+            <!--
+            When Thymeleaf accesses the properties of an object in the model,
+            it actually uses JavaBeans conventions, not direct field access.
+            This means it's using the getter methods of your classes
+            -->
+            <!-- model: a student object -->
+            <td th:text="${theStudent.firstName}" />
+            <td th:text="${theStudent.lastName}" />
+            <td th:text="${theStudent.email}" />
+        </tr>
+        </tbody>
+    </table>
+
+    <h4>Selected Courses</h4>
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+        <tr>
+            <th>Course ID</th>
+            <th>Course Name</th>
+            <th>Course Credit</th>
+            <th>College</th>
+            <th>Room</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+
+        <!-- model: a list of course object -->
+
+        <tbody>
+        <tr th:each="course : ${enrolledCourses}">
+            <!--
+            When Thymeleaf accesses the properties of an object in the model,
+            it actually uses JavaBeans conventions, not direct field access.
+            This means it's using the getter methods of your classes
+            -->
+            <td th:text="${course.id}" />
+            <td th:text="${course.courseName}" />
+            <td th:text="${course.courseCredit}" />
+            <td th:text="${course.collegeName}" />
+            <td>
+                <a th:text="${course.room.roomNumber}" th:href="@{/mvc/showRoom(roomId = ${course.room.roomNumber})}"
+                   class="btn btn-info btn-sm">
+                </a>
+            </td>
+            <td>
+                <!--
+                If returns true, the browser will navigate to the URL in the href attribute.
+                If returns false, the browser will not navigate away.
+                -->
+                <a th:href="@{/mvc/removeCourse(courseId = ${course.id})}"
+                   class="btn btn-danger btn-sm"
+                   onclick="if (!(confirm('Are you sure you want to remove this course?'))) return false">
+                    Remove
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <a th:href="@{/mvc/courses}" class="btn btn-danger btn-sm">
+        Browse the courses list
+    </a>
+
+    <br><br>
+
+    <form action="#" th:action="@{/logout}" method="POST">
+        <div style="margin-top: 10px;" class="form-group">
+            <div class="col-sm-6 controls">
+                <button type="submit" class="btn btn-success" value="Logout">Logout</button>
+            </div>
+        </div>
+    </form>
+
+</div>
+
+</body>
+</html>

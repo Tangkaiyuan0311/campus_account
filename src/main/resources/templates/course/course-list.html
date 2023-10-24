@@ -1,0 +1,121 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+                xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+
+    <title>Courses List</title>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div>
+        <a th:href="@{/}">Main-page</a>
+        <h3>Course Browser</h3>
+    </div>
+    <hr>
+
+    <p>
+        Welcome: <span sec:authentication="principal.username"></span> <a th:if="${not authority.update and not authority.delete}" th:href="@{/mvc/myStudentInfo}">my student info</a> <br><br>
+        Role (s): <span sec:authentication="principal.authorities"></span>
+    </p>
+
+    <!-- add more courses here -->
+    <a th:if="${authority.update}" th:href="@{/mvc/addCourseForm}" class="btn btn-primary btn-sm mb-3">
+        Add Course
+    </a>
+
+
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+        <tr>
+            <th>Course ID</th>
+            <th>Course Name</th>
+            <th>Course Credit</th>
+            <th>College</th>
+            <th>Room</th>
+            <th>Availability</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+
+        <!-- model: a list of course object -->
+
+        <tbody>
+        <tr th:each="course : ${theCourses}">
+            <!--
+            When Thymeleaf accesses the properties of an object in the model,
+            it actually uses JavaBeans conventions, not direct field access.
+            This means it's using the getter methods of your classes
+            -->
+            <td th:text="${course.id}" />
+            <td th:text="${course.courseName}" />
+            <td th:text="${course.courseCredit}" />
+            <td th:text="${course.collegeName}" />
+            <!-- room -->
+            <td>
+                <a th:text="${course.room.roomNumber}" th:href="@{/mvc/showRoom(roomId = ${course.room.roomNumber})}"
+                   class="btn btn-info btn-sm">
+                </a>
+            </td>
+            <!-- availability -->
+            <td th:text="${#sets.size(course.users)}+'/'+${course.capacity}+' selected'"></td>
+            <!-- action -->
+            <td>
+                <!-- update -->
+
+                <a th:if="${authority.update}" th:href="@{/mvc/updateCourseForm(courseId = ${course.id})}"
+                   class="btn btn-info btn-sm">
+                    Update
+                </a>
+
+                <!--
+                If returns true, the browser will navigate to the URL in the href attribute.
+                If returns false, the browser will not navigate away.
+                -->
+                <!-- delete -->
+
+                <a th:if="${authority.delete}" th:href="@{/mvc/deleteCourse(courseId = ${course.id})}"
+                   class="btn btn-danger btn-sm"
+                   onclick="if (!(confirm('Are you sure you want to delete this course?'))) return false">
+                    Delete
+                </a>
+
+                <!-- enroll only for student-->
+                <a th:if="${authority.read and not authority.update and not #sets.contains(enrolledCoursesId, course.id) and not (course.capacity == #sets.size(course.users))}" th:href="@{/mvc/enrollCourse(courseId = ${course.id})}"
+                   class="btn btn-info btn-sm">
+                    Enroll
+                </a>
+                <span th:if="${authority.read and not authority.update and not #sets.contains(enrolledCoursesId, course.id) and (course.capacity == #sets.size(course.users))}">
+                    Course is full
+                </span>
+                <span th:if="${authority.read and not authority.update and #sets.contains(enrolledCoursesId, course.id)}">
+                    Enrolled
+                </span>
+
+
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <form action="#" th:action="@{/logout}" method="POST">
+        <div style="margin-top: 10px;" class="form-group">
+            <div class="col-sm-6 controls">
+                <button type="submit" class="btn btn-success" value="Logout">Logout</button>
+            </div>
+        </div>
+    </form>
+
+</div>
+
+</body>
+</html>
